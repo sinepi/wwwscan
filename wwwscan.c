@@ -107,7 +107,6 @@ static void thread_task(void *ptr)
     int timeout = ((ARGS *)ptr)->timeout;
     long status_code;
 
-    fflush(stdout);
     printf("Checking    %20.20s  ...\r", dir);
     fflush(stdout);
     strncat(url, root, sizeof(url)/sizeof(url[0])-1);
