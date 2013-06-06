@@ -28,15 +28,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110 - 1301, USA.
 #include "wwwscan.h"
 
 
-static size_t write_callback_func(void *buffer,
+static void write_callback_func(void *buffer,
                                   size_t size,
                                   size_t nmemb,
                                   void *userp)
 {
     char **response_ptr =  (char**)userp;
-    /* assuming the response is a string */
     *response_ptr = strndup(buffer, (size_t)(size *nmemb));
-    //return size * nmemb;
 }
 
 
@@ -109,6 +107,7 @@ static void thread_task(void *ptr)
     int timeout = ((ARGS *)ptr)->timeout;
     long status_code;
 
+    fflush(stdout);
     printf("Checking    %20.20s  ...\r", dir);
     fflush(stdout);
     strncat(url, root, sizeof(url)/sizeof(url[0])-1);
@@ -158,7 +157,7 @@ static void signal_handler(int signo)
 }
 
 
-static report_writer(char *content, char *reportfilename)
+static int report_writer(char *content, char *reportfilename)
 {
     FILE *fp;
     fp = fopen(reportfilename, "w");
@@ -169,6 +168,7 @@ static report_writer(char *content, char *reportfilename)
     }
     fputs(content, fp);
     fclose(fp);
+    return 0;
 }
 
 
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
     }
 
     // 創建線程池，開始工作
-    threadpool pool;
+    threadpool *pool;
     pool = create_threadpool(threadnum);
     signal(SIGINT, signal_handler);
 
