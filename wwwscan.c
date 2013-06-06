@@ -28,13 +28,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110 - 1301, USA.
 #include "wwwscan.h"
 
 
-static void write_callback_func(void *buffer,
+static size_t write_callback_func(void *buffer,
                                   size_t size,
                                   size_t nmemb,
                                   void *userp)
 {
     char **response_ptr =  (char**)userp;
     *response_ptr = strndup(buffer, (size_t)(size *nmemb));
+    return size * nmemb;
 }
 
 
